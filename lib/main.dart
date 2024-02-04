@@ -1,4 +1,4 @@
-import 'package:api_riverpod/wishlist_app.dart';
+import 'package:api_riverpod/view/wishlist_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
