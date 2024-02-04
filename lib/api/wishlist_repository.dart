@@ -2,6 +2,9 @@ import 'package:api_riverpod/wishlist.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../api.dart';
+
+
 
 final repositoryProvider = Provider<WishlistRepository>((_) => WishlistRepository(),);
 
@@ -12,7 +15,7 @@ class WishlistRepository{
   final _client = Dio(
     BaseOptions(
       baseUrl: "https://app.rakuten.co.jp/services/api",
-      queryParameters: {"applicationId": "1015330916483325363"},
+      queryParameters: {"applicationId": applicationId},
     ),
   );
 
