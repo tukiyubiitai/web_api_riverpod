@@ -1,10 +1,10 @@
-import 'package:api_riverpod/view/wishlist_app.dart';
+import 'package:api_riverpod/view/wishlist_app_async_notifier_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //
 void main() {
-  runApp( const ProviderScope(child:MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,13 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WishlistApp(title: 'Flutter Demo Home Page'),
+      home: const WishlistAsyncNotifierApp(title: 'Flutter Demo Home Page'),
     );
   }
 }
-
-

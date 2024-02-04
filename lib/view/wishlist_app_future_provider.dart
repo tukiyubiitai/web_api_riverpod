@@ -16,11 +16,18 @@ class WishlistApp extends ConsumerWidget {
         title: Text(title),
       ),
       body: wishlist.when(
-          error:(e,stack){
-            debugPrint("$e");
-            debugPrint("$stack");
-Center(child: Text("エラー $e"));
-          },
+          error:(e,stack)=>Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+              Text("Problem loading books"),
+                SizedBox(height: 10,),
+                OutlinedButton(onPressed: (){
+
+                }, child: Text("Try again"))
+            ],),
+          ),
         loading: ()=> Center(child: CircularProgressIndicator(),),
         data: (wishlist){
             return Text("Go response: ${wishlist.length}");
