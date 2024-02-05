@@ -1,4 +1,5 @@
 import 'package:api_riverpod/providers/async_notifier.dart';
+import 'package:api_riverpod/view/search_page.dart';
 import 'package:api_riverpod/view/wishlisted_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,12 +38,80 @@ class _WishlistAsyncNotifierAppState
     );
   }
 
+  void _searchPage() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+          transitionsBuilder: (_, animation, __, child) {
+            return SlideTransition(
+              position: Tween(
+                begin: Offset(0, 1),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+          pageBuilder: (
+            _,
+            __,
+            ___,
+          ) =>
+              SearchPage()),
+    );
+  }
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      ref.watch(wishlistAsyncNotifierProvider.notifier).loadMoreBooks();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(wishlistAsyncNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: _searchPage,
+            icon: Icon(
+              Icons.search_rounded,
+              color: Colors.blue,
+              size: 40,
+            ),
+          ),
+        ],
+        leading: IconButton(
+          onPressed: () {
+            _scrollController.animateTo(
+              0, // スクロール位置を0に設定（最上部）
+              duration: Duration(seconds: 1), // アニメーションの時間
+              curve: Curves.easeOut, // アニメーションのカーブ
+            );
+          },
+          icon: Icon(
+            Icons.arrow_upward_sharp,
+            color: Colors.redAccent,
+            size: 30,
+          ),
+        ),
       ),
       body: state.when(
         error: (e, stack) => Center(
@@ -69,6 +138,7 @@ class _WishlistAsyncNotifierAppState
           child: CircularProgressIndicator(),
         ),
         data: (data) => GridView.builder(
+          controller: _scrollController,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
           ),
