@@ -12,3 +12,4 @@ export 'providers/future.dart';
 export 'providers/notifier.dart';
 //WishlistアプリケーションのUI部分、特に画面やビュー
 export 'view/wishlist_app_future_provider.dart';
+export 'view/wishlisted_view.dart';

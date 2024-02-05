@@ -1,14 +1,27 @@
 import 'package:api_riverpod/api.dart';
 import 'package:api_riverpod/wishlist.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final wishlistAsyncNotifierProvider =
-    AsyncNotifierProvider<WishlistAsyncNotifier, WishlistState>(
-        () => WishlistAsyncNotifier());
+part 'async_notifier.g.dart';
 
-class WishlistAsyncNotifier extends AsyncNotifier<WishlistState> {
+@riverpod
+List<Book> wishlistBooks(WishlistBooksRef ref) {
+  final state = ref.watch(wishlistAsyncNotifierProvider).value;
+  if (state == null) {
+    return [];
+  }
+  return state.wishlist
+      .map<Book>((id) => state.books.singleWhere((book) => book.id == id))
+      .toList();
+}
+
+@riverpod
+class WishlistAsyncNotifier extends _$WishlistAsyncNotifier {
+  //api呼び出し
   WishlistRepository get _api => ref.read(repositoryProvider(ApplicationId));
 
+  //buildメソッドは、AsyncNotifierの状態を初期化するために使用されます。
+  // ここでは、書籍データの読み込みを行い、その結果を状態として設定します。
   @override
   Future<WishlistState> build() => _loadBooks();
 
@@ -23,23 +36,17 @@ class WishlistAsyncNotifier extends AsyncNotifier<WishlistState> {
     state = await AsyncValue.guard(() => _loadBooks());
   }
 
+  //addToWishlistメソッドは、指定されたIDの書籍をウィッシュリストに追加します。
   void addToWishlist(String id) {
     state = AsyncValue.data(state.value!.copyWith(
       wishlist: {...state.value!.wishlist, id},
     ));
   }
 
+  //isWishlistedメソッドは、指定されたIDの書籍がウィッシュリストに含まれているかどうかを判定します。
   bool isWishlisted(String id) => state.value!.wishlist.contains(id);
 
-  // void removeFromWishlist(String id) {
-  //   try {
-  //     state = AsyncValue.data(state.value!.copyWith(
-  //       wishlist: {...state.value!.wishlist..remove(id)},
-  //     ));
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  //removeFromWishlistメソッドは、指定されたIDの書籍をウィッシュリストから削除します。
   void removeFromWishlist(String id) {
     try {
       // 変更可能なセットのコピーを作成

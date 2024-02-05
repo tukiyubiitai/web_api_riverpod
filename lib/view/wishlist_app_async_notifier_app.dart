@@ -1,4 +1,5 @@
 import 'package:api_riverpod/providers/async_notifier.dart';
+import 'package:api_riverpod/view/wishlisted_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,14 +15,36 @@ class WishlistAsyncNotifierApp extends ConsumerStatefulWidget {
 
 class _WishlistAsyncNotifierAppState
     extends ConsumerState<WishlistAsyncNotifierApp> {
+  void _launchWishlistedView() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+          transitionsBuilder: (_, animation, __, child) {
+            return SlideTransition(
+              position: Tween(
+                begin: Offset(0, 1),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+          pageBuilder: (
+            _,
+            __,
+            ___,
+          ) =>
+              WishlistedView()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final wishlist = ref.watch(wishlistAsyncNotifierProvider);
+    final state = ref.watch(wishlistAsyncNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: wishlist.when(
+      body: state.when(
         error: (e, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -33,6 +56,7 @@ class _WishlistAsyncNotifierAppState
               ),
               OutlinedButton(
                   onPressed: () {
+                    //再読み込み
                     ref
                         .read(wishlistAsyncNotifierProvider.notifier)
                         .reloadBooks();
@@ -117,6 +141,35 @@ class _WishlistAsyncNotifierAppState
           },
         ),
       ),
+      floatingActionButton: state.value == null
+          ? null
+          : Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: FloatingActionButton(
+                    onPressed: _launchWishlistedView,
+                    tooltip: "View Wishlist",
+                    child: const Icon(Icons.auto_fix_high_outlined),
+                  ),
+                ),
+                //wishlistが存在する時だけ表示
+                if (state.value?.wishlist.isNotEmpty == true)
+                  Positioned(
+                    right: -4,
+                    bottom: 40,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.tealAccent,
+                      radius: 12,
+                      child: Text(
+                        state.value!.wishlist.length.toString(),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
     );
   }
 }
