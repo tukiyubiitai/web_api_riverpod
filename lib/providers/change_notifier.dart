@@ -9,7 +9,6 @@ final wishlistCNProvider =
     ChangeNotifierProvider((ref) => WishlistChangeNotifier(ref));
 
 // 非同期処理の状態を表す列挙体です。読み込み中、成功、エラーの3状態があります。
-enum LoadingState { progress, success, error }
 
 // 書籍リストの状態を管理するためのChangeNotifierクラスです。
 class WishlistChangeNotifier extends ChangeNotifier {

@@ -4,6 +4,7 @@
 export 'api/wishlist_repository.dart';
 //Bookモデルの定義が含まれるファイル。アプリケーションで扱う書籍データ
 export 'models/book.dart';
+export 'models/loading_state.dart';
 export 'models/wishlist_state.dart';
 export 'providers/async_notifier.dart';
 export 'providers/change_notifier.dart';

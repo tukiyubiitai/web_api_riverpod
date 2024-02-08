@@ -4,6 +4,9 @@ import 'package:api_riverpod/providers/async_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/favorite_item.dart';
+import '../providers/favorite_notifier.dart';
+
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
 
@@ -16,16 +19,14 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(searchWishlistAsyncNotifierProvider);
+    final state = ref.watch(wishlistAsyncNotifierProvider);
     Timer? _debounce;
 
     void _onSearchChanged(String value) {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 500), () {
         if (value.isNotEmpty) {
-          ref
-              .read(searchWishlistAsyncNotifierProvider.notifier)
-              .searchBooks(value);
+          ref.read(wishlistAsyncNotifierProvider.notifier).searchBooks(value);
         }
       });
     }
@@ -132,12 +133,22 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         Positioned.fill(
                             child: InkWell(
                           onTap: () {
-                            final vm = ref.read(
-                                searchWishlistAsyncNotifierProvider.notifier);
+                            final vm = ref
+                                .read(wishlistAsyncNotifierProvider.notifier);
                             if (vm.isWishlisted(book.id)) {
                               vm.removeFromWishlist(book.id);
                             } else {
-                              vm.addToWishlist(book.id);
+                              // vm.addToWishlist(book.id);
+                              final favoriteItem = FavoriteItem(
+                                title: book.title,
+                                imageUrl: book.imageUrl,
+                                id: book.id,
+                                source:
+                                    "楽天API", // 例: "Google Books", "Open Library"など
+                              );
+                              ref
+                                  .read(favoriteItemNotifierProvider.notifier)
+                                  .addFavoriteItem(favoriteItem);
                             }
                           },
                           child: Align(

@@ -2,7 +2,6 @@ import 'package:api_riverpod/wishlist.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// グローバルにアクセス可能なRepositoryProviderを定義します。
 // これにより、WishlistRepositoryのインスタンスをアプリケーション全体で再利用できます。
 final repositoryProvider = Provider.family<WishlistRepository, String>(
   (_, applicationId) => WishlistRepository(applicationId),
@@ -16,7 +15,6 @@ class WishlistRepository {
 
   String defaultWord = "本";
 
-  // Dio HTTPクライアントを初期化します。ここでは、楽天APIへのリクエストに使用する基本設定を行います。
   // baseUrlにはAPIのベースURLを指定し、共通のクエリパラメータとしてapplicationIdを設定します。
   Dio get _client => Dio(
         BaseOptions(
@@ -29,10 +27,8 @@ class WishlistRepository {
   // Dioクライアントを使用して、指定された条件で書籍の検索を行います。
   Future<List<Book>> getBooks({int page = 1, String keyWord = "本"}) async {
     // APIからデータを取得します。リクエストパラメータには、キーワードやソート条件などを指定しています。
-    // final result = await _client.get(
-    //     "/BooksTotal/Search/20170404?&keyword=$keyWord&NGKeyword=予約&sort=sales&page=$page");
     final result = await _client.get(
-        "/BooksTotal/Search/20170404?&keyword=$keyWord&NGKeyword=予約&sort=sales&hits=8");
+        "/BooksTotal/Search/20170404?&keyword=$keyWord&NGKeyword=予約&sort=sales&page=$page");
 
     // 取得したデータから"Items"キーに対応する部分を抽出し、List<dynamic>型として取り出します。
     final List<dynamic> items = result.data["Items"];

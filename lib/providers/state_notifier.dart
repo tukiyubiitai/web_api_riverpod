@@ -3,12 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api.dart';
 import '../wishlist.dart';
 
-/*
-freezedを使うことで、
-不変の状態を持つデータクラスを簡単に定義し、
-その状態をStateNotifierを通じて更新することができます。
- */
-
 final wishlistStateProvider =
     StateNotifierProvider<WishlistStateNotifier, WishlistState>(
         (ref) => WishlistStateNotifier(ref));

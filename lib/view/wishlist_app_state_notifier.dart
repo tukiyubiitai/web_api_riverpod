@@ -1,5 +1,5 @@
-import 'package:api_riverpod/providers/change_notifier.dart';
 import 'package:api_riverpod/providers/state_notifier.dart';
+import 'package:api_riverpod/wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,7 +55,57 @@ class _WishlistCNProviderAppState
                     ],
                   ),
                 )
-              : Text("Got response: ${wishlist.books.length}"),
+              : GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: wishlist.books.length,
+                  itemBuilder: (context, index) {
+                    final book = wishlist.books[index];
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Image.network(
+                              book.imageUrl,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.grey,
+                                  ],
+                                ),
+                              ),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                  wishlist.books[index].title,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

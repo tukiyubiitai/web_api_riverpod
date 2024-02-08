@@ -4,6 +4,9 @@ import 'package:api_riverpod/view/wishlisted_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/favorite_item.dart';
+import '../providers/favorite_notifier.dart';
+
 class WishlistAsyncNotifierApp extends ConsumerStatefulWidget {
   const WishlistAsyncNotifierApp({required this.title, super.key});
 
@@ -83,8 +86,8 @@ class _WishlistAsyncNotifierAppState
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(favoriteItemNotifierProvider.notifier);
     final state = ref.watch(wishlistAsyncNotifierProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -187,12 +190,27 @@ class _WishlistAsyncNotifierAppState
                   Positioned.fill(
                       child: InkWell(
                     onTap: () {
+                      // final favoriteItem = FavoriteItem(
+                      //   title: book.title,
+                      //   imageUrl: book.imageUrl,
+                      //   id: book.id,
+                      //   source: "楽天API", // 例: "Google Books", "Open Library"など
+                      // );
+                      ref.read(favoriteListNotifierProvider.notifier).addList(
+                            FavoriteItem(
+                              title: book.title,
+                              imageUrl: book.imageUrl,
+                              id: book.id,
+                              source:
+                                  "楽天API", // 例: "Google Books", "Open Library"など
+                            ),
+                          );
                       final vm =
                           ref.read(wishlistAsyncNotifierProvider.notifier);
                       if (vm.isWishlisted(book.id)) {
                         vm.removeFromWishlist(book.id);
                       } else {
-                        vm.addToWishlist(book.id);
+                        vm.addToWishlist(book);
                       }
                     },
                     child: Align(
