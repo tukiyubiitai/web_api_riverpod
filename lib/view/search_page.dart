@@ -4,9 +4,6 @@ import 'package:api_riverpod/providers/async_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/favorite_item.dart';
-import '../providers/favorite_notifier.dart';
-
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
 
@@ -138,17 +135,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             if (vm.isWishlisted(book.id)) {
                               vm.removeFromWishlist(book.id);
                             } else {
-                              // vm.addToWishlist(book.id);
-                              final favoriteItem = FavoriteItem(
-                                title: book.title,
-                                imageUrl: book.imageUrl,
-                                id: book.id,
-                                source:
-                                    "楽天API", // 例: "Google Books", "Open Library"など
-                              );
-                              ref
-                                  .read(favoriteItemNotifierProvider.notifier)
-                                  .addFavoriteItem(favoriteItem);
+                              vm.addToWishlist(book);
                             }
                           },
                           child: Align(

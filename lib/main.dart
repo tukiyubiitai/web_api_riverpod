@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WishlistAsyncNotifierApp(title: 'Flutter Demo Home Page'),
+      home: const WishlistAsyncNotifierApp(
+        title: 'WishlistAsyncNotifierApp',
+      ),
     );
   }
 }

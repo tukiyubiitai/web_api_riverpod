@@ -27,7 +27,7 @@ class WishlistAsyncNotifier extends _$WishlistAsyncNotifier {
   WishlistRepository get _api => ref.read(repositoryProvider(ApplicationId));
 
   //buildメソッドは、AsyncNotifierの状態を初期化するために使用されます。
-  // ここでは、書籍データの読み込みを行い、その結果を状態として設定します。
+  // ここでは、書籍データの読み込みを行い、その結果を状態として設定します。検索
   @override
   Future<WishlistState> build() => _loadBooks();
 
@@ -75,19 +75,6 @@ class WishlistAsyncNotifier extends _$WishlistAsyncNotifier {
       wishlist: {...state.value!.wishlist, book.id},
     ));
   }
-
-  // void addToFavoriteList(Book book) {
-  //   final favoriteItem = FavoriteItem(
-  //     title: book.title,
-  //     imageUrl: book.imageUrl,
-  //     id: book.id,
-  //     source: "楽天API", // 例: "Google Books", "Open Library"など
-  //   );
-  //   //book.id, book.title, book.imageUrl
-  //   ref
-  //       .read(favoriteItemNotifierProvider.notifier)
-  //       .addFavoriteItem(favoriteItem);
-  // }
 
   //isWishlistedメソッドは、指定されたIDの書籍がウィッシュリストに含まれているかどうかを判定します。
   bool isWishlisted(String id) => state.value!.wishlist.contains(id);
